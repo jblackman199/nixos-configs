@@ -6,49 +6,14 @@
 {
   imports = [ # Include the results of the hardware scan.
     ./hardware-configuration.nix
-    (import <nix-snapd>).nixosModules.default # Install nix-snapd using the flake at /home/jblackman199/flake.nix
   ];
-
-  boot = { # Enable bootloader as Grub
-    initrd.verbose = false;
-    consoleLogLevel = 0;
-    kernelParams = ["quiet" "udev.log_level=3"];
-    loader.efi = {
-      canTouchEfiVariables = true;
-    };
-    loader.grub = {
-      enable = true;
-      efiSupport = true;
-      device = "nodev";
-      useOSProber = true;
-      theme = pkgs.stdenv.mkDerivation {
-        pname = "distro-grub-themes";
-        version = "3.1";
-        src = pkgs.fetchFromGitHub {
-          owner = "AdisonCavani";
-          repo = "distro-grub-themes";
-          rev = "v3.1";
-          hash = "sha256-ZcoGbbOMDDwjLhsvs77C7G7vINQnprdfI37a9ccrmPs=";
-        };
-        installPhase = "cp -r customize/nixos $out";
-      };
-    };
-  };
 
   boot.kernelPackages = pkgs.linuxPackages_latest; # Install the latest kernel
 
-  boot.binfmt.registrations.appimage = { # Make AppImages work
-    wrapInterpreterInShell = false;
-    interpreter = "${pkgs.appimage-run}/bin/appimage-run";
-    recognitionType = "magic";
-    offset = 0;
-    mask = ''\xff\xff\xff\xff\x00\x00\x00\x00\xff\xff\xff'';
-    magicOrExtension = ''\x7fELF....AI\x02'';
-  };
-
   # Hardware stuff
 
-  hardware.bluetooth.enable = true; # enables support for Bluetooth
+  hardware.bluetooth = {
+    enable = true; # enables support for Bluetooth
   hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
 
   hardware.pulseaudio.enable = false; # Enable sound with pipewire.
@@ -133,13 +98,6 @@
   nix.extraOptions =  # Enable nix experimental features
   "experimental-features = nix-command flakes";
 
-  # This value determines the NixOS release from which the default settings for stateful data,
-  # like file locations and database versions on your system were taken. It‘s perfectly fine
-  # and recommended to leave this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-  system.stateVersion = "24.05"; # Did you read the comment?
-
   system.autoUpgrade = {
     enable = true; # Automatically upgrade
     randomizedDelaySec = "30sec"; # Raise upgrade attempts
@@ -156,7 +114,6 @@
 
   # List services that you want to enable:
 
-  services.snap.enable = true;  # Enable snap
   services.flatpak.enable = true; # Enable flatpak
 
   services.xserver.enable = false;  # Enable the X11 windowing system. You can disable this if you're only using the Wayland session.
@@ -167,7 +124,6 @@
   services.displayManager.sddm.wayland.enable = true; # Set SDDM to Wayland
   services.displayManager.sddm.autoNumlock = true;  # Enable numlock on SDDM
   environment.plasma6.excludePackages = with pkgs.kdePackages; [  # Exclude listed packages
-    breeze-grub
     elisa
     khelpcenter
     krdp
@@ -183,21 +139,7 @@
 
   services.printing.enable = true;  # Enable CUPS to print documents
 
-  services.printing.drivers = with pkgs; [ # List printer drivers to install
-    cnijfilter2
-  ];
-
-  services.power-profiles-daemon.enable = false; # Disable power profiles daemon
-  services.tlp.enable = true; # Enable tlp
-
   services.tailscale.enable = true; # Install and enable tailscale
-
-  services.open-webui.enable = true; # Enable Open-WebUI
-
-  virtualisation.libvirtd.enable = true; # Install and enable libvirt
-  programs.virt-manager.enable = true; # Install and enable virt-manager
-
-  # services.openssh.enable = true; # Enable the OpenSSH daemon.
 
   # services.xserver.libinput.enable = true;  # Enable touchpad support (enabled default in most desktopManager).
 
@@ -205,17 +147,12 @@
 
   environment.systemPackages = with pkgs; [ # List packages installed in system profile. To search, run: nix search wget
     airshipper
-    bottom
-    cpufetch
-    discord
     fastfetch
-    fish
     fwupd
     git
     hunspell
     hunspellDicts.en_US
     hyphen
-    jupyter
     kdePackages.discover
     kdePackages.dolphin-plugins
     kdePackages.ffmpegthumbs
@@ -234,25 +171,17 @@
     kdePackages.sonnet
     kdePackages.svgpart
     libreoffice-qt6-fresh
-    lshw
     mythes
-    ollama
     qalculate-gtk
-    qbittorrent
-    ramfetch
-    rclone
     rnote
     rssguard
-    sage
     signal-desktop
     superTuxKart
     thunderbird
-    tlp
     ventoy
     vlc
     xdg-desktop-portal-gtk
     xournalpp
-    xwaylandvideobridge
   ];
 
   fonts.packages = with pkgs; [ # List fonts installed
@@ -301,4 +230,11 @@
   #   enable = true;
   #   enableSSHSupport = true;
   # };
+
+  # This value determines the NixOS release from which the default settings for stateful data,
+  # like file locations and database versions on your system were taken. It‘s perfectly fine
+  # and recommended to leave this value at the release version of the first install of this system.
+  # Before changing this value read the documentation for this option
+  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+  system.stateVersion = "25.11"; # Did you read the comment?
 }
