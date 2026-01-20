@@ -14,7 +14,8 @@
 
   hardware.bluetooth = {
     enable = true; # enables support for Bluetooth
-  hardware.bluetooth.powerOnBoot = true; # powers up the default Bluetooth controller on boot
+    powerOnBoot = true; # powers up the default Bluetooth controller on boot
+  };
 
   hardware.pulseaudio.enable = false; # Enable sound with pipewire.
   security.rtkit.enable = true;
@@ -65,7 +66,6 @@
 
   networking.hostName = "jaydens-nix"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-
   # networking.proxy.default = "http://user:password@proxy:port/";  # Configure network proxy if necessary
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
