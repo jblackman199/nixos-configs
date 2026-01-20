@@ -8,6 +8,8 @@
     ./hardware-configuration.nix
   ];
 
+  nix.settings.experimental-features = [ "nix-command" "flakes" ]; # Enable Flakes
+
   boot.kernelPackages = pkgs.linuxPackages_latest; # Install the latest kernel
 
   # Hardware stuff
@@ -62,19 +64,12 @@
     };
   };
 
-  time.hardwareClockInLocalTime = true; # Make the time not suck in Windows
-
   networking.hostName = "jaydens-nix"; # Define your hostname.
-  # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
-  # networking.proxy.default = "http://user:password@proxy:port/";  # Configure network proxy if necessary
-  # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
-
   networking.networkmanager.enable = true;  # Enable networking
 
   time.timeZone = "America/Boise";  # Set your time zone
 
   i18n.defaultLocale = "en_US.UTF-8"; # Select internationalisation properties
-
   i18n.extraLocaleSettings = {
     LC_ADDRESS = "en_US.UTF-8";
     LC_IDENTIFICATION = "en_US.UTF-8";
@@ -87,16 +82,12 @@
     LC_TIME = "en_US.UTF-8";
   };
 
-  # media-session.enable = true;  # use the example session manager
-
   users.users.jblackman199 = {  # Define a user account. Don't forget to set a password with ‘passwd’
     isNormalUser = true;
     description = "Jayden Blackman";
     extraGroups = [ "networkmanager" "wheel" ];
+    shell = pkgs.fish; # Make fish the default shell
   };
-
-  nix.extraOptions =  # Enable nix experimental features
-  "experimental-features = nix-command flakes";
 
   system.autoUpgrade = {
     enable = true; # Automatically upgrade
@@ -140,8 +131,6 @@
   services.printing.enable = true;  # Enable CUPS to print documents
 
   services.tailscale.enable = true; # Install and enable tailscale
-
-  # services.xserver.libinput.enable = true;  # Enable touchpad support (enabled default in most desktopManager).
 
   nixpkgs.config.allowUnfree = true;  # Allow unfree packages
 
@@ -196,12 +185,7 @@
     unicode-emoji
   ];
 
-  programs.steam = {  # Install and enable Steam to run
-    enable = true;
-    remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
-    localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
-  };
+  programs.steam.enable = true;
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [ # Let nonfree Steam dependencies work
     "steam"
@@ -221,7 +205,6 @@
   };
 
   programs.fish.enable = true;  # Enable Fish
-  users.defaultUserShell = pkgs.fish; # Make fish the default shell
 
   programs.dconf.enable = true; # Fix GTK themes
 
