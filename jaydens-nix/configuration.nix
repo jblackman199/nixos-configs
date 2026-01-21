@@ -197,6 +197,8 @@
     "steam-run"
     "teams"
   ];
+  
+  nixpkgs.config.permittedInsecurePackages = [ "ventoy-1.1.07"];
 
   networking.firewall = { # Open ports for KDE Connect
     enable = true;
