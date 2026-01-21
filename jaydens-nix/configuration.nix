@@ -22,14 +22,12 @@
     powerOnBoot = true; # powers up the default Bluetooth controller on boot
   };
 
-  services.pulseaudio.enable = false; # Enable sound with pipewire.
   security.rtkit.enable = true;
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    #jack.enable = true;  If you want to use JACK applications, uncomment this
   };
 
   hardware.graphics.enable = true; # Enable OpenGL
@@ -53,7 +51,7 @@
     # "nouveau" open source driver). Support is limited to the Turing and later architectures. Full
     # list of supported GPUs is at: https://github.com/NVIDIA/open-gpu-kernel-modules#compatible-gpus
     # Only available from driver 515.43.04+ Currently alpha-quality/buggy, so false is currently the recommended setting.
-    open = false;
+    open = true;
 
     nvidiaSettings = false; # Enable the Nvidia settings menu, accessible via `nvidia-settings`
 
@@ -110,13 +108,14 @@
 
   services.flatpak.enable = true; # Enable flatpak
 
-  services.xserver.enable = false;  # Enable the X11 windowing system. You can disable this if you're only using the Wayland session.
-
-  services.displayManager.sddm.enable = true; # Enable SDDM
   services.desktopManager.plasma6.enable = true;  # Enable Plasma 6
-  services.displayManager.defaultSession = "plasma"; # Set default session plasme = wayland, plasmax11 = x11
-  services.displayManager.sddm.wayland.enable = true; # Set SDDM to Wayland
-  services.displayManager.sddm.autoNumlock = true;  # Enable numlock on SDDM
+  services.displayManager = {
+    defaultSession = "plasma"; # Set default session plasme = wayland, plasmax11 = x11
+    sddm.enable = true; # Enable SDDM
+    sddm.wayland.enable = true; # Set SDDM to Wayland
+    sddm.autoNumlock = true;  # Enable numlock on SDDM
+  };
+
   environment.plasma6.excludePackages = with pkgs.kdePackages; [  # Exclude listed packages
     elisa
     khelpcenter
