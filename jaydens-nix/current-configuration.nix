@@ -10,8 +10,6 @@
       ./hardware-configuration.nix
     ];
 
-  nix.settings.experimental-features = [ "nix-command" "flakes" ]; # Enable Flakes
-
   # Bootloader.
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
@@ -84,7 +82,7 @@
   # services.xserver.libinput.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jaydens-nix = {
+  users.users.jblackman199 = {
     isNormalUser = true;
     description = "Jayden Blackman";
     extraGroups = [ "networkmanager" "wheel" ];
