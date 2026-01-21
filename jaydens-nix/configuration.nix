@@ -10,6 +10,9 @@
 
   nix.settings.experimental-features = [ "nix-command" "flakes" ]; # Enable Flakes
 
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+
   boot.kernelPackages = pkgs.linuxPackages_latest; # Install the latest kernel
 
   # Hardware stuff
